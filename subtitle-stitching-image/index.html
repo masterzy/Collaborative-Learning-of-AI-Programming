@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>字幕拼接图片生成器</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="preview-container">
+        <canvas id="imageCanvas"></canvas>
+      </div>
+      <div class="control-panel">
+        <h3>图片设置</h3>
+        <div class="control-group">
+          <label>上传背景图片</label>
+          <input type="file" id="imageUpload" accept="image/*" />
+        </div>
+        <div class="text-input-group">
+          <h3>文字内容设置</h3>
+          <div class="text-lines" id="textLines">
+            <div class="text-line">
+              <input
+                type="text"
+                placeholder="输入文字内容"
+                class="line-input"
+              />
+              <button class="remove-line">删除</button>
+            </div>
+          </div>
+          <button id="addLine">添加新行</button>
+        </div>
+        <div class="style-controls">
+          <h3>样式设置</h3>
+          <div class="control-group font-controls">
+            <div class="font-style-row">
+              <div class="font-color-control">
+                <label>字体颜色</label>
+                <input type="color" id="fontColor" value="#ffffff" />
+              </div>
+              <div class="stroke-control">
+                <label>启用描边</label>
+                <input type="checkbox" id="enableStroke" />
+                <input
+                  type="color"
+                  id="strokeColor"
+                  value="#000000"
+                  class="stroke-color-input"
+                  style="display: none"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <label>字体大小</label>
+            <input type="range" id="fontSize" min="12" max="200" value="24" />
+          </div>
+          <div class="control-group">
+            <label>字幕高度</label>
+            <input
+              type="range"
+              id="subtitleHeight"
+              min="10"
+              max="200"
+              value="40"
+            />
+          </div>
+          <div class="control-group">
+            <label>字幕间隔</label>
+            <input
+              type="range"
+              id="subtitleSpacing"
+              min="0"
+              max="100"
+              value="1"
+            />
+          </div>
+          <div class="control-group">
+            <label>背景透明度</label>
+            <input type="range" id="bgOpacity" min="0" max="100" value="20" />
+          </div>
+        </div>
+        <button id="downloadBtn" class="download-btn">下载图片</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
