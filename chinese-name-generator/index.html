@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>中文名生成器 - Chinese Name Generator</title>
+    <style>
+      body {
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,20 Q60,35 50,50 T50,80" fill="none" stroke="%23cc000022" stroke-width="2"/></svg>');
+        background-size: 100px 100px;
+        opacity: 0.1;
+        pointer-events: none;
+        animation: snakePattern 30s linear infinite;
+      }
+
+      @keyframes snakePattern {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 100px 100px;
+        }
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.98);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 600px;
+        border: 2px solid #cc0000;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .container::before,
+      .container::after {
+        content: "";
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background-image: url("https://api.iconify.design/noto:snake.svg?color=%23cc0000&width=64");
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.2;
+        transition: transform 0.3s ease;
+      }
+
+      .container::before {
+        top: 10px;
+        right: 0;
+        animation: snakeFloat1 3s ease-in-out infinite;
+      }
+
+      .container::after {
+        bottom: 10px;
+        left: -30px;
+        animation: snakeFloat2 3s ease-in-out infinite reverse;
+      }
+
+      @keyframes snakeFloat1 {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(-10px);
+        }
+      }
+      @keyframes snakeFloat2 {
+        0%,
+        100% {
+          transform: translateY(0) rotate(45deg);
+        }
+        50% {
+          transform: translateY(-10px) rotate(45deg);
+        }
+      }
+
+      .name-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1.5rem;
+        border: 1px solid #cc0000;
+        box-shadow: 0 4px 6px rgba(204, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .name-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(204, 0, 0, 0.15);
+      }
+
+      .name-card::before {
+        content: "";
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        width: 40px;
+        height: 40px;
+        background-image: url("https://api.iconify.design/noto:snake.svg?color=%23cc0000&width=32");
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.1;
+      }
+
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+      }
+
+      .input-group {
+        margin-bottom: 1rem;
+      }
+
+      .mb-3 {
+        margin-bottom: 1rem;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+      }
+
+      input[type="text"]:focus,
+      input[type="number"]:focus {
+        border-color: #3498db;
+        outline: none;
+      }
+
+      .birth-year-group,
+      .gender-group {
+        margin-bottom: 1rem;
+      }
+
+      .birth-year-row {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+      }
+
+      .birth-year-group {
+        flex: 1;
+      }
+
+      .gender-group {
+        flex: 1;
+      }
+
+      .birth-year-group label,
+      .gender-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+        font-size: 0.9rem;
+      }
+
+      .gender-options {
+        display: flex;
+        gap: 1.5rem;
+        height: 46px;
+      }
+
+      .gender-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+      }
+
+      .gender-option input[type="radio"] {
+        margin: 0;
+        cursor: pointer;
+      }
+
+      .gender-option span {
+        color: #2c3e50;
+        font-size: 0.9rem;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+
+      button:disabled {
+        background-color: #bdc3c7;
+        cursor: not-allowed;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        margin: 1rem 0;
+        position: relative;
+      }
+
+      .loading-icon {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-image: url("https://api.iconify.design/noto:snake.svg?color=%23cc0000&width=40");
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: snake-move 3s ease-in-out infinite;
+      }
+
+      @keyframes snake-move {
+        0%,
+        100% {
+          transform: translateX(-40px) scaleX(-1);
+        }
+        50% {
+          transform: translateX(40px) scaleX(-1);
+        }
+        51% {
+          transform: translateX(40px) scaleX(1);
+        }
+        99% {
+          transform: translateX(-40px) scaleX(1);
+        }
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border-color: #cc0000;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #cc0000;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #aa0000;
+      }
+
+      button:disabled {
+        background-color: #ffcccc;
+        cursor: not-allowed;
+      }
+
+      .loading-text {
+        display: block;
+        color: transparent;
+        font-size: 1rem;
+        background: linear-gradient(90deg, #cc0000, #ff6b6b, #ff9999, #cc0000);
+        background-size: 300% 100%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        animation: gradientFlow 3s linear infinite;
+      }
+
+      @keyframes gradientFlow {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 300% 50%;
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.8;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .results {
+        display: none;
+        margin-top: 2rem;
+        gap: 20px;
+        width: 85%;
+        padding: 40px 30px;
+        background: white;
+        border-radius: 10px;
+        border: 2px solid #cc0000;
+      }
+
+      .name-card {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+      }
+
+      .chinese-name {
+        font-size: 1.5rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .meaning {
+        color: #666;
+        margin-bottom: 0.5rem;
+        line-height: 1.5;
+      }
+
+      .error-message {
+        color: #e74c3c;
+        text-align: center;
+        margin-top: 1rem;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>中文名生成器<br /><small>Chinese Name Generator</small></h1>
+
+      <div class="input-group">
+        <input
+          type="text"
+          id="englishName"
+          placeholder="请输入您的英文名 (Enter your English name)"
+          class="mb-3"
+          value="elon mush"
+        />
+        <div class="birth-year-row">
+          <div class="birth-year-group">
+            <label for="birthYear">出生年份 Birth Year</label>
+            <input
+              type="number"
+              id="birthYear"
+              min="1900"
+              max="2023"
+              placeholder="例如：1990"
+              class="birth-year-input"
+              value="1993"
+            />
+          </div>
+          <div class="gender-group">
+            <label class="gender-label">性别 Gender</label>
+            <div class="gender-options">
+              <label class="gender-option">
+                <input type="radio" name="gender" value="male" checked />
+                <span>男 Male</span>
+              </label>
+              <label class="gender-option">
+                <input type="radio" name="gender" value="female" />
+                <span>女 Female</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button id="generateBtn">生成中文名 Generate</button>
+
+      <div class="loading" id="loading">
+        <div class="loading-icon"></div>
+        <span class="loading-text">正在生成您的中文名</span>
+      </div>
+
+      <div class="error-message" id="errorMessage">
+        抱歉，生成失败，请稍后重试。
+        <br />
+        Sorry, generation failed. Please try again later.
+      </div>
+    </div>
+    <div class="results" id="results"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
