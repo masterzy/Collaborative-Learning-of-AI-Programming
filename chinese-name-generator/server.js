@@ -1,7 +1,7 @@
 const http = require('http');
 const https = require('https');
 
-const API_KEY = 'b35db717-0864-4b9a-b257-317290f7e32f';
+const API_KEY = '**********';
 const API_URL = 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
 
 // 系统提示词，用于指导AI生成有趣且文化相关的中文名
